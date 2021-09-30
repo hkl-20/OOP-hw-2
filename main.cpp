@@ -74,7 +74,14 @@ int main ()
     dungeon = CreateDungeon(width, height, startPoint, exitPoint);
 
     Traversal(dungeon, startPoint, exitPoint, width, height);
+    
+    for (int i = 0; i < height*width; i ++){
+        cout << dungeon[i] << " "; 
+        if ((i + 1) % width == 0){
+            cout << endl;
+        }
 
+    }
     /*
     *   ADD YOUR CODE HERE IF REQUIRED
     */
