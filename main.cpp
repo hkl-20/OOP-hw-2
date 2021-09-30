@@ -115,6 +115,54 @@ void Traversal(char* dungeon, Point& startPoint, cPoint& exitPoint, cint width, 
     /*
     *   ADD YOUR CODE HERE AS REQUIRED. DEFINE NEW FUNCTIONS IF IT GETS LONG.
     */
+   for(int i = 0; i < width; i++){
+        dungeon[i] = 'W';
+    }
+
+    for(int i = height*width - width; i < height*width; i++){
+        dungeon[i] = 'W';
+    }
+
+    for(int i = width; i < width*height - width; i = i + width){
+        dungeon[i] = 'W';
+    }
+
+    for(int i = width*2 - 1; i < width*height - width; i = i + width){
+        dungeon[i] = 'W';
+    }
+    
+    int a, b;
+    //Random Objects
+    for (int i = width + 1; i < (height*width - width - 1); i++){
+        if ((i) % width != 0 && (i + 1) % width != 0 ){
+
+            a = (rand() % 100);
+
+            if ( a <= 20 ){
+
+                b = (rand() % 100 + 1);
+                
+                if ((b >= 0) && (b < 15) ){
+                    dungeon[i] = 'E';
+                }
+                if ((b >= 15) && (b < 30) ){
+                    dungeon[i] = 'H';
+                }
+                if ((b >= 30) && (b < 45) ){
+                    dungeon[i] = 'T';
+                }
+                if ((b >= 45) && (b < 60) ){
+                    dungeon[i] = 'F';
+                }
+                else{
+                    dungeon[i] = 'W';
+                }
+
+
+            }
+        }
+    }
+
 
 }
 
@@ -130,4 +178,16 @@ char* CreateDungeon(int width, int height, Point& ref_startPoint, Point& ref_exi
     /*
     *   ADD YOUR CODE HERE AS REQUIRED. DEFINE NEW FUNCTIONS IF IT GETS LONG.
     */
+   int size;
+    size = width * height;
+    
+    char *dungeon;
+
+    dungeon = new char [size];
+
+    for (int i = 0; i < size; i++){
+        dungeon[i] = ' ';
+    }
+
+    return dungeon;
 }
