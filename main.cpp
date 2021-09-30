@@ -59,8 +59,8 @@ int main ()
 {
     srand(time(0));
 
-    int width = 0;
-    int height = 0;
+    int width = 8;
+    int height = 8;
 
     /*
     *   ADD YOUR CODE HERE IF REQUIRED
@@ -74,6 +74,10 @@ int main ()
     dungeon = CreateDungeon(width, height, startPoint, exitPoint);
 
     Traversal(dungeon, startPoint, exitPoint, width, height);
+
+    /*
+    *   ADD YOUR CODE HERE IF REQUIRED
+    */
     
     for (int i = 0; i < height*width; i ++){
         cout << dungeon[i] << " "; 
@@ -82,9 +86,7 @@ int main ()
         }
 
     }
-    /*
-    *   ADD YOUR CODE HERE IF REQUIRED
-    */
+
 
     return 0;
 }
@@ -122,7 +124,8 @@ void Traversal(char* dungeon, Point& startPoint, cPoint& exitPoint, cint width, 
     /*
     *   ADD YOUR CODE HERE AS REQUIRED. DEFINE NEW FUNCTIONS IF IT GETS LONG.
     */
-   for(int i = 0; i < width; i++){
+    
+    for(int i = 0; i < width; i++){
         dungeon[i] = 'W';
     }
 
@@ -147,18 +150,18 @@ void Traversal(char* dungeon, Point& startPoint, cPoint& exitPoint, cint width, 
 
             if ( a <= 20 ){
 
-                b = (rand() % 100 + 1);
+                b = (rand() % 100);
                 
                 if ((b >= 0) && (b < 15) ){
                     dungeon[i] = 'E';
                 }
-                if ((b >= 15) && (b < 30) ){
+                else if((b >= 15) && (b < 30) ){
                     dungeon[i] = 'H';
                 }
-                if ((b >= 30) && (b < 45) ){
+                else if((b >= 30) && (b < 45) ){
                     dungeon[i] = 'T';
                 }
-                if ((b >= 45) && (b < 60) ){
+                else if((b >= 45) && (b < 60) ){
                     dungeon[i] = 'F';
                 }
                 else{
@@ -170,6 +173,62 @@ void Traversal(char* dungeon, Point& startPoint, cPoint& exitPoint, cint width, 
         }
     }
 
+    //Person 
+    
+    int person;
+    person = rand() % (height - 2);
+  
+    cout << person << endl;
+  
+    if (dungeon[(person * width ) + 1] == ' '){
+        dungeon[(person * width ) + 1] = 'P';
+        
+    }
+    else{
+        dungeon[width + 1] = 'P';
+    }
+    
+    //Exit 
+
+    int exit;
+    exit = rand() % (height - 2);
+
+    cout << exit << endl;
+
+    if (dungeon[((exit + 1) * width)  - 2] == ' '){
+        dungeon[((exit + 1) * width)  - 2] = 'X';
+    }
+    else{
+        dungeon[width*height - width - 2] = 'X';
+    }
+
+    //Game
+// KINDA STUCK AT THIS PART
+  //  char userinput;
+
+  //  cout << "Press S to start" << endl;
+
+  //  cin >> userinput;
+
+  //  cout << startPoint.x << " " << startPoint.y << endl;
+
+  //  while (userinput != 'x'){
+  //      cout << "UP -> U, DOWN -> D, LEFT -> L, RIGHT -> R" << endl;
+  //      cin >> userinput;
+    //    if (userinput == 'U'){
+   //         dungeon[]
+   //     }
+  //  }
+
+
+
+    
+
+
+
+   
+
+   
 
 }
 
@@ -185,7 +244,7 @@ char* CreateDungeon(int width, int height, Point& ref_startPoint, Point& ref_exi
     /*
     *   ADD YOUR CODE HERE AS REQUIRED. DEFINE NEW FUNCTIONS IF IT GETS LONG.
     */
-   int size;
+    int size;
     size = width * height;
     
     char *dungeon;
@@ -197,4 +256,5 @@ char* CreateDungeon(int width, int height, Point& ref_startPoint, Point& ref_exi
     }
 
     return dungeon;
+   
 }
