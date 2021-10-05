@@ -142,7 +142,7 @@ void HitStatements()
 void GetHitStatements()
 {
     /*
-    Assign some statements for when the user gets hit and call them at a certain probability
+    Statements for when the user gets hit by enemies and then each of them are called at a certain probability
     */
     int select = rand() % 3 + 1;
     if (select == 1){
@@ -160,7 +160,8 @@ void GetHitStatements()
 void Traversal(char* dungeon, Point& startPoint, cPoint& exitPoint, cint width, cint height)
 {
     Player player;
-
+    
+    // the next 4 loops are creating the boundary for the dungeon
     for(int i = 0; i < width; i++){
         dungeon[i] = 'W';
     }
@@ -179,20 +180,32 @@ void Traversal(char* dungeon, Point& startPoint, cPoint& exitPoint, cint width, 
     for (int i = width + 1; i < (height*width - width - 1); i++){
         if ((i) % width != 0 && (i + 1) % width != 0 ){
             a = (rand() % 100);
+            
+            // object placements with a 20% probability
             if ( a <= 20 ){
                 b = (rand() % 100);
+
+                // enemy attack placement with a 15% probability
                 if ((b >= 0) && (b < 15) ){
                     dungeon[i] = 'E';
                 }
+
+                // health boost placement with a 15% probability
                 else if((b >= 15) && (b < 30) ){
                     dungeon[i] = 'H';
                 }
+
+                // trap placement with a 15% probability
                 else if((b >= 30) && (b < 45) ){
                     dungeon[i] = 'T';
                 }
+
+                // food placement with a 15% probability
                 else if((b >= 45) && (b < 60) ){
                     dungeon[i] = 'F';
                 }
+
+                // wall placement with a 40% probability
                 else{
                     dungeon[i] = 'W';
                 }
@@ -201,10 +214,12 @@ void Traversal(char* dungeon, Point& startPoint, cPoint& exitPoint, cint width, 
     }
 
     //Person 
-
     int person;
+    int size = width * height;
+
     person = rand() % (height - 2);
-  
+
+    // placement of a person in the dungeon
     if (dungeon[(person * width ) + 1] == ' '){
         dungeon[(person * width ) + 1] = 'P';
     }
@@ -213,35 +228,32 @@ void Traversal(char* dungeon, Point& startPoint, cPoint& exitPoint, cint width, 
     }
     
     //Exit 
-
     int exit;
     exit = rand() % (height - 2);
 
+    // position for the escape in dungeon
     if (dungeon[((exit + 1) * width)  - 2] == ' '){
         dungeon[((exit + 1) * width)  - 2] = 'X';
     }
     else{
-        dungeon[width*height - width - 2] = 'X';
+        dungeon[size - width - 2] = 'X';
     }
 
-
-    for (int i = 0; i < height*width; i ++){
+    // Visual Dungeon Creation
+    /*
+    for (int i = 0; i < size; i ++){
         cout << dungeon[i] << " "; 
         if ((i + 1) % width == 0){
             cout << endl;
         }
     }
+    */
 
-    cout << "\n";
-    //(?)
-    int size = width * height;
+    // Getting the position of the player
     for(int x = 1; x < size; x++){
         if (dungeon[x] == 'P'){
-            cout << "\n" << x << "\n";
             player.x = (x % width);
-            cout << "Width of Player is: " << player.x << endl;
             player.y = (x / width);
-            cout << "Height of Player is: " << player.y << endl;
         }
     }
 
@@ -250,279 +262,367 @@ void Traversal(char* dungeon, Point& startPoint, cPoint& exitPoint, cint width, 
     cout << "you find yourself alone in a dark dungeon. With nothing but your\n";
     cout << "wits, you choose to take a step...\n";
 
+    // when player is in the dungeon, has food and is alive
     while (player.alive == true && player.food != 0)
     {
         char nextDirection;
         int nextX, nextY;
         cout << "\nIn which direction do you want to move? (U,D,L,R; Press X if you want to give up and die.)\n";
         cin >> nextDirection;
+
+        // condition for when player wants to exit
         if (nextDirection == 'x' || nextDirection == 'X'){
             player.alive = false;
         }
+
+        // condition for when player wants to move up
         else if (nextDirection == 'u' || nextDirection == 'U'){
             nextY = player.y - 1;
+
+            // getting the current position of 'P' 
             int currentPlace = ((player.y) * width) + player.x;
             char currentTemp = dungeon[currentPlace];
+
+            // getting the next potential position of 'P'
             int nextPlace = ((nextY) * width) + player.x;
             char nextTemp = dungeon[nextPlace];
-            //If next is empty
+
+            // placing 'P' if the next position is empty
             if (nextTemp == ' '){
                 dungeon[currentPlace] = ' ';
                 dungeon[nextPlace] = 'P';
                 player.y = nextY;
                 cout << "There is nothing here\n";
             }
-            //If next is Food
+
+            // condition for when player gets food
             else if (nextTemp == 'F'){
                 int bonusFood = rand() % 5 + 4;
+
+                //addition to the current food amount for the player
                 player.food += bonusFood;
-                //Food gets used Up so replaced by player
                 dungeon[currentPlace] = ' ';
                 dungeon[nextPlace] = 'P';
                 player.y = nextY;
-                //
+
+                // fun statements to accompany
                 FoodStatements();
             }
-            //If next is Trap
+
+            // condition for when player encounters a trap
             else if (nextTemp == 'T'){
+
+                //loss of health due to the trap
                 player.loseHealth();
                 dungeon[currentPlace] = ' ';
                 dungeon[nextPlace] = 'P';
                 player.y = nextY;
-                TrapStatements();
 
+                // fun statements to accompany
+                TrapStatements();
             }
-            //If next is health 
+
+            // condition for when a player gets a health boost
             else if (nextTemp == 'H'){
+
+                //player gets a health boost
                 player.gainHealth();
                 dungeon[currentPlace] = ' ';
                 dungeon[nextPlace] = 'P';
                 player.y = nextY;
+                cout << "Your current health is: " << player.health << endl;
             }
-            //If next is wall
+
+            // condition for when a wall is encountered
             else if (nextTemp == 'W'){
                 cout << "There appears to be a wall here\n";
             }
-            //If next is Enemy
+
+            // condition for when enemies are encountered
             else if (nextTemp == 'E'){
                 int enemies = rand() % 3 + 2;
                 dungeon[currentPlace] = ' ';
                 dungeon[nextPlace] = 'P';
                 player.y = nextY;
 
+                // combat function is called to deal with enemies
                 Combat(player, enemies);
-
             }
+
+            // condition for when player exits the dungeon 
             else if (nextTemp == 'X'){
                 break;  
             }
+            
+            // current player update
             player.food --;
-
             cout << "You have food for " << player.food << " more turns\n";
             cout << "You have " << player.health << " health left\n";
-            for (int i = 0; i < height*width; i ++){
-                cout << dungeon[i] << " "; 
-                if ((i + 1) % width == 0){
-                    cout << endl;
-                }
-            } 
         }
+
+        // condition for when player wants to move right
         else if (nextDirection == 'r' || nextDirection == 'R'){
             nextX = player.x + 1;
+
+            // getting the current position of 'P'
             int currentPlace = ((player.y) * width) + player.x;
             char currentTemp = dungeon[currentPlace];
+
+            // getting the next potential position of 'P'
             int nextPlace = ((player.y) * width) + nextX;
             char nextTemp = dungeon[nextPlace];
-
+            
+            // placing 'P' if the next position is empty
             if (nextTemp == ' '){
                 dungeon[currentPlace] = ' ';
                 dungeon[nextPlace] = 'P';
                 player.x = nextX;
                 cout << "There is nothing here\n";
             }
+
+            // condition for when player gets food
             else if (nextTemp == 'F'){
                 int bonusFood = rand() % 5 + 4;
+                
+                //addition to the current food amount for the player
                 player.food += bonusFood;
-                //
                 dungeon[currentPlace] = ' ';
                 dungeon[nextPlace] = 'P';
                 player.x = nextX;
-                //
+                
+                // fun statements to accompany
                 FoodStatements();
             }
-            //If next is Trap
+
+            // condition for when player encounters a trap
             else if (nextTemp == 'T'){
+                
+                //loss of health due to the trap
                 player.loseHealth();
                 dungeon[currentPlace] = ' ';
                 dungeon[nextPlace] = 'P';
                 player.x = nextX;
+
+                // fun statements to accompany
                 TrapStatements();
 
             }
-            //If next is health 
+
+            // condition for when a player gets a health boost
             else if (nextTemp == 'H'){
+
+                //player gets a health boost
                 player.gainHealth();
                 dungeon[currentPlace] = ' ';
                 dungeon[nextPlace] = 'P';
                 player.x = nextX;
+                cout << "Your current health is: " << player.health << endl;
             }
-            //If next is Wall 
+
+            // condition for when a wall is encountered
             else if (nextTemp == 'W'){
                 cout << "There appears to be a wall here\n";
             }
-            //If next is Enemy
-            else if (nextTemp == 'E'){
 
+            // condition for when enemies are encountered
+            else if (nextTemp == 'E'){
                 int enemies = rand() % 3 + 2;
                 dungeon[currentPlace] = ' ';
                 dungeon[nextPlace] = 'P';
                 player.x = nextX;
-                Combat(player, enemies);
-                
 
+                // combat function is called to deal with enemies
+                Combat(player, enemies);
             }
+
+            // condition for when player exits the dungeon
             else if (nextTemp == 'X'){
                 break;  
             }
+
+            // current player update
             player.food --;
             cout << "You have food for " << player.food << " more turns\n";
             cout << "You have " << player.health << " health left\n";
-            for (int i = 0; i < height*width; i ++){
-                cout << dungeon[i] << " "; 
-                if ((i + 1) % width == 0){
-                    cout << endl;
-                }
-            } 
         }
+
+        // condition for when player wants to move left
         else if (nextDirection == 'l' || nextDirection == 'L'){
             nextX = player.x - 1;
+
+            // getting the current position of 'P'
             int currentPlace = ((player.y) * width) + player.x;
             char currentTemp = dungeon[currentPlace];
+
+            // getting the next potential position of 'P'
             int nextPlace = ((player.y) * width) + nextX;
             char nextTemp = dungeon[nextPlace];
+
+            // placing 'P' if the next position is empty
             if (nextTemp == ' '){
                 dungeon[currentPlace] = ' ';
                 dungeon[nextPlace] = 'P';
                 player.x = nextX;
                 cout << "There is nothing here\n";
             }
+
+            // condition for when player gets food
             else if (nextTemp == 'F'){
                 int bonusFood = rand() % 5 + 4;
+
+                //addition to the current food amount for the player
                 player.food += bonusFood;
                 dungeon[currentPlace] = ' ';
-                //
                 dungeon[nextPlace] = 'P';
                 player.x = nextX;
-                //
+                
+                // fun statements to accompany
                 FoodStatements();
             }
-            //If next is Trap
+
+            // condition for when player encounters a trap
             else if (nextTemp == 'T'){
+
+                // loss of health due to the trap
                 player.loseHealth();
                 dungeon[currentPlace] = ' ';
                 dungeon[nextPlace] = 'P';
                 player.x = nextX;
+
+                // fun statements to accompany
                 TrapStatements();
 
             }
-            //If next is health 
+            
+            // condition for when a player gets a health boost
             else if (nextTemp == 'H'){
+
+                //player gets a health boost
                 player.gainHealth();
                 dungeon[currentPlace] = ' ';
                 dungeon[nextPlace] = 'P';
                 player.x = nextX;
+                cout << "Your current health is: " << player.health << endl;
             }
+
+            // condition for when a wall is encountered
             else if (nextTemp == 'W'){
                 cout << "There appears to be a wall here\n";
             }
-            //If next is Enemy
+            
+            // condition for when enemies are encountered
             else if (nextTemp == 'E'){
                 int enemies = rand() % 3 + 2;
                 dungeon[currentPlace] = ' ';
                 dungeon[nextPlace] = 'P';
                 player.x = nextX;
-                Combat(player, enemies); 
 
+                // combat function is called to deal with enemies
+                Combat(player, enemies); 
             }
+
+            // condition for when player exits the dungeon 
             else if (nextTemp == 'X'){
                 break;  
             }
+
+            // current player update
             player.food --;
             cout << "You have food for " << player.food << " more turns\n";
-            cout << "You have " << player.health << " health left\n";
-            for (int i = 0; i < height*width; i ++){
-                cout << dungeon[i] << " "; 
-                if ((i + 1) % width == 0){
-                    cout << endl;
-                }
-            }   
+            cout << "You have " << player.health << " health left\n";  
         }
+
+        // condition for when player wants to move down
         else if (nextDirection == 'd' || nextDirection == 'D'){
             nextY = player.y + 1;
+
+            // getting the current position of 'P'
             int currentPlace = ((player.y) * width) + player.x;
             char currentTemp = dungeon[currentPlace];
+
+            // getting the next potential position of 'P'
             int nextPlace = ((nextY) * width) + player.x;
             char nextTemp = dungeon[nextPlace];
+
+            // placing 'P' if the next position is empty
             if (nextTemp == ' '){
                 dungeon[currentPlace] = ' ';
                 dungeon[nextPlace] = 'P';
                 player.y = nextY;
                 cout << "There is nothing here\n";
             }
+
+            // condition for when player gets food
             else if (nextTemp == 'F'){
                 int bonusFood = rand() % 5 + 4;
+                
+                //addition to the current food amount for the player
                 player.food += bonusFood;
-                //
                 dungeon[currentPlace] = ' ';
                 dungeon[nextPlace] = 'P';
                 player.y = nextY;
-                //
+                
+                // fun statements to accompany
                 FoodStatements();
             }
-            //If next is Trap
+            
+            // condition for when player encounters a trap
             else if (nextTemp == 'T'){
+
+                //loss of health due to the trap
                 player.loseHealth();
                 dungeon[currentPlace] = ' ';
                 dungeon[nextPlace] = 'P';
                 player.y = nextY;
-                TrapStatements();
 
+                // fun statements to accompany
+                TrapStatements();
             }
-            //If next is health 
+
+            // condition for when a player gets a health boost 
             else if (nextTemp == 'H'){
+
+                //player gets a health boost
                 player.gainHealth();
                 dungeon[currentPlace] = ' ';
                 dungeon[nextPlace] = 'P';
                 player.y = nextY;
+                cout << "Your current health is: " << player.health << endl;
             }
+
+            // condition for when a wall is encountered
             else if (nextTemp == 'W'){
                 cout << "There appears to be a wall here\n";
             }
-            //If next is Enemy
+            
+            // condition for when enemies are encountered
             else if (nextTemp == 'E'){
                 int enemies = rand() % 3 + 2;
                 dungeon[currentPlace] = ' ';
                 dungeon[nextPlace] = 'P';
                 player.y = nextY;
+
+                // combat function is called to deal with enemies
                 Combat(player, enemies);
             }
+
+            // condition for when player exits the dungeon
             else if (nextTemp == 'X'){
                 break;  
             }
+
+            // current player update
             player.food --;
             cout << "You have food for " << player.food << " more turns\n";
             cout << "You have " << player.health << " health left\n";
-            for (int i = 0; i < height*width; i ++){
-                cout << dungeon[i] << " "; 
-                if ((i + 1) % width == 0){
-                    cout << endl;
-                }
-            }
         }
     }
 
     if (player.alive == false){
         cout << "You have died.";
+    }
+    else if (player.food == 0){
+        cout << "You have no more food, you have died";
     }
     else{
         cout << "Congratulations, You have made it out of the dungeon.";
@@ -532,16 +632,21 @@ void Traversal(char* dungeon, Point& startPoint, cPoint& exitPoint, cint width, 
 
 void Combat(Player& player, int enemies)
 {   cout << enemies << endl;
+
     //Combat function for when player arrives at E
     cout << "You come across " << enemies << " enemies. You will have to fight.\n";
 
     while(enemies != 0 && player.alive == true){
         int playerHit = rand() % 100;
+
+        // Condition for player to hit enemy
         if (playerHit < 30){
             HitStatements();
             enemies --;
             cout << "You killed one enemy!\n";
         }
+
+        // Condition for enemies to hit player
         if (enemies != 0){
             for (int x = 0; x < enemies; x++){
                 int enemyHit = rand() % 100;
@@ -558,15 +663,17 @@ void Combat(Player& player, int enemies)
 char* CreateDungeon(int width, int height, Point& ref_startPoint, Point& ref_exitPoint)
 {
     /*
-    *   ADD YOUR CODE HERE AS REQUIRED. DEFINE NEW FUNCTIONS IF IT GETS LONG.
+    *   Creating a single sized array as a dungeon for the game
     */
     int size;
     size = width * height;
     
     char *dungeon;
 
+    // the dungeon array
     dungeon = new char [size];
 
+    // populating the dungeon
     for (int i = 0; i < size; i++){
         dungeon[i] = ' ';
     }
