@@ -59,34 +59,38 @@ int main ()
 {
     srand(time(0));
 
-    int width = 8;
-    int height = 8;
+    // Story line initialization
+    cout << "Enter the width and size of the dungeon you want to play in: \n";
+    cout << "It is recommended if the grid is bigger than 8x8 for a better experience.\n\n";
 
-    /*
-    *   ADD YOUR CODE HERE IF REQUIRED
-    */
+    int width, height;
+    cout << "Width: ";
+    cin >>  width;
+    cout << "\nHeight: ";
+    cin >> height;
+    cout << "\n";
 
     Point startPoint(0,0);
     Point exitPoint(0,0);
 
     char* dungeon = nullptr;
 
+    // Dungeon creation based on height and width provided
     dungeon = CreateDungeon(width, height, startPoint, exitPoint);
 
     Traversal(dungeon, startPoint, exitPoint, width, height);
-
-    /*
-    *   ADD YOUR CODE HERE IF REQUIRED
-    */
     
     for (int i = 0; i < height*width; i ++){
         cout << dungeon[i] << " "; 
         if ((i + 1) % width == 0){
             cout << endl;
         }
-
     }
 
+    // Beginning of the game in story mode
+    cout << "\nAfter being captured by a raid of some robbers on your caravan,\n";
+    cout << "you find yourself alone in a dark dungeon. With nothing but your\n";
+    cout << "wits, you choose to take a step...\n";
 
     return 0;
 }
@@ -96,6 +100,9 @@ void TrapStatements()
     /*
     *   ADD YOUR CODE HERE AS REQUIRED
     */
+   /* 
+   Just assign some statements for health detoriation and call them at a certain probability
+   */
 }
 
 void FoodStatements()
@@ -103,6 +110,9 @@ void FoodStatements()
     /*
     *   ADD YOUR CODE HERE AS REQUIRED
     */
+   /* 
+   Just assign some statements for getting food and call them at a certain probability
+   */
 }
 
 void HitStatements()
@@ -110,6 +120,9 @@ void HitStatements()
     /*
     *   ADD YOUR CODE HERE AS REQUIRED
     */
+   /* 
+   Assign some statements for when the user hits and call them at a certain probability
+   */
 }
 
 void GetHitStatements()
@@ -117,6 +130,9 @@ void GetHitStatements()
     /*
     *   ADD YOUR CODE HERE AS REQUIRED
     */
+   /* 
+   Assign some statements for when the user gets hit and call them at a certain probability
+   */
 }
 
 void Traversal(char* dungeon, Point& startPoint, cPoint& exitPoint, cint width, cint height)
@@ -128,16 +144,13 @@ void Traversal(char* dungeon, Point& startPoint, cPoint& exitPoint, cint width, 
     for(int i = 0; i < width; i++){
         dungeon[i] = 'W';
     }
-
     for(int i = height*width - width; i < height*width; i++){
         dungeon[i] = 'W';
     }
-
-    for(int i = width; i < width*height - width; i = i + width){
+    for(int i = width; i < width*height - width; i += width){
         dungeon[i] = 'W';
     }
-
-    for(int i = width*2 - 1; i < width*height - width; i = i + width){
+    for(int i = width*2 - 1; i < width*height - width; i += width){
         dungeon[i] = 'W';
     }
     
@@ -145,13 +158,9 @@ void Traversal(char* dungeon, Point& startPoint, cPoint& exitPoint, cint width, 
     //Random Objects
     for (int i = width + 1; i < (height*width - width - 1); i++){
         if ((i) % width != 0 && (i + 1) % width != 0 ){
-
             a = (rand() % 100);
-
             if ( a <= 20 ){
-
                 b = (rand() % 100);
-                
                 if ((b >= 0) && (b < 15) ){
                     dungeon[i] = 'E';
                 }
@@ -167,8 +176,6 @@ void Traversal(char* dungeon, Point& startPoint, cPoint& exitPoint, cint width, 
                 else{
                     dungeon[i] = 'W';
                 }
-
-
             }
         }
     }
@@ -178,11 +185,10 @@ void Traversal(char* dungeon, Point& startPoint, cPoint& exitPoint, cint width, 
     int person;
     person = rand() % (height - 2);
   
-    cout << person << endl;
+    //cout << person << endl;
   
     if (dungeon[(person * width ) + 1] == ' '){
         dungeon[(person * width ) + 1] = 'P';
-        
     }
     else{
         dungeon[width + 1] = 'P';
@@ -193,7 +199,7 @@ void Traversal(char* dungeon, Point& startPoint, cPoint& exitPoint, cint width, 
     int exit;
     exit = rand() % (height - 2);
 
-    cout << exit << endl;
+    //cout << exit << endl;
 
     if (dungeon[((exit + 1) * width)  - 2] == ' '){
         dungeon[((exit + 1) * width)  - 2] = 'X';
@@ -234,9 +240,13 @@ void Traversal(char* dungeon, Point& startPoint, cPoint& exitPoint, cint width, 
 
 void Combat(Player& player, int enemies)
 {
-    /*
-    *   ADD YOUR CODE HERE AS REQUIRED
-    */
+    
+   /*
+    In this function create a for loop in which you will get hit or will hit someone
+        
+        1) The prob for a successful attack is 0.3
+            1) If that happens then the return attack prob is 0.1
+   */
 }
 
 char* CreateDungeon(int width, int height, Point& ref_startPoint, Point& ref_exitPoint)
@@ -254,7 +264,5 @@ char* CreateDungeon(int width, int height, Point& ref_startPoint, Point& ref_exi
     for (int i = 0; i < size; i++){
         dungeon[i] = ' ';
     }
-
     return dungeon;
-   
 }
