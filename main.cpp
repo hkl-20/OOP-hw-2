@@ -275,16 +275,21 @@ void Traversal(char* dungeon, Point& startPoint, cPoint& exitPoint, cint width, 
                 dungeon[currentPlace] = ' ';
                 dungeon[nextPlace] = 'P';
                 player.y = nextY;
-                player.food --;
-                cout << "You have food for " << player.food << " more turns\n";
-
-                for (int i = 0; i < height*width; i ++){
-                    cout << dungeon[i] << " "; 
-                    if ((i + 1) % width == 0){
-                        cout << endl;
-                    }
-                }   
+                cout << "There is nothing here\n";
             }
+            else if (nextTemp == 'F'){
+                int bonusFood = rand() % 5 + 4;
+                player.food += bonusFood;
+                FoodStatements();
+            }
+            player.food --;
+            cout << "You have food for " << player.food << " more turns\n";
+            for (int i = 0; i < height*width; i ++){
+                cout << dungeon[i] << " "; 
+                if ((i + 1) % width == 0){
+                    cout << endl;
+                }
+            } 
         }
         else if (nextDirection == 'r' || nextDirection == 'R'){
             nextX = player.x + 1;
@@ -296,16 +301,21 @@ void Traversal(char* dungeon, Point& startPoint, cPoint& exitPoint, cint width, 
                 dungeon[currentPlace] = ' ';
                 dungeon[nextPlace] = 'P';
                 player.x = nextX;
-                player.food --;
-                cout << "You have food for " << player.food << " more turns\n";
-
-                for (int i = 0; i < height*width; i ++){
-                    cout << dungeon[i] << " "; 
-                    if ((i + 1) % width == 0){
-                        cout << endl;
-                    }
-                }   
+                cout << "There is nothing here\n";
             }
+            else if (nextTemp == 'F'){
+                int bonusFood = rand() % 5 + 4;
+                player.food += bonusFood;
+                FoodStatements();
+            }
+            player.food --;
+            cout << "You have food for " << player.food << " more turns\n";
+            for (int i = 0; i < height*width; i ++){
+                cout << dungeon[i] << " "; 
+                if ((i + 1) % width == 0){
+                    cout << endl;
+                }
+            } 
         }
         else if (nextDirection == 'l' || nextDirection == 'L'){
             nextX = player.x - 1;
@@ -317,16 +327,21 @@ void Traversal(char* dungeon, Point& startPoint, cPoint& exitPoint, cint width, 
                 dungeon[currentPlace] = ' ';
                 dungeon[nextPlace] = 'P';
                 player.x = nextX;
-                player.food --;
-                cout << "You have food for " << player.food << " more turns\n";
-
-                for (int i = 0; i < height*width; i ++){
-                    cout << dungeon[i] << " "; 
-                    if ((i + 1) % width == 0){
-                        cout << endl;
-                    }
-                }   
+                cout << "There is nothing here\n";
             }
+            else if (nextTemp == 'F'){
+                int bonusFood = rand() % 5 + 4;
+                player.food += bonusFood;
+                FoodStatements();
+            }
+            player.food --;
+            cout << "You have food for " << player.food << " more turns\n";
+            for (int i = 0; i < height*width; i ++){
+                cout << dungeon[i] << " "; 
+                if ((i + 1) % width == 0){
+                    cout << endl;
+                }
+            }   
         }
         else if (nextDirection == 'd' || nextDirection == 'D'){
             nextY = player.y + 1;
@@ -338,22 +353,22 @@ void Traversal(char* dungeon, Point& startPoint, cPoint& exitPoint, cint width, 
                 dungeon[currentPlace] = ' ';
                 dungeon[nextPlace] = 'P';
                 player.y = nextY;
-                player.food --;
-                cout << "You have food for " << player.food << " more turns\n";
-
-                for (int i = 0; i < height*width; i ++){
-                    cout << dungeon[i] << " "; 
-                    if ((i + 1) % width == 0){
-                        cout << endl;
-                    }
-                }   
+                cout << "There is nothing here\n";
             }
-        }
-        else{
+            else if (nextTemp == 'F'){
+                int bonusFood = rand() % 5 + 4;
+                player.food += bonusFood;
+                FoodStatements();
+            }
             player.food --;
             cout << "You have food for " << player.food << " more turns\n";
+            for (int i = 0; i < height*width; i ++){
+                cout << dungeon[i] << " "; 
+                if ((i + 1) % width == 0){
+                    cout << endl;
+                }
+            }
         }
-
     }
 
 
