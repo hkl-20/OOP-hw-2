@@ -80,6 +80,8 @@ int main ()
 
     Traversal(dungeon, startPoint, exitPoint, width, height);
 
+    
+
     return 0;
 }
 
@@ -132,8 +134,8 @@ void HitStatements()
     {
         cout << "Your speed is unmatched and delivered a Stone Cold Stunner.\n";
     }
-    else{
-        cout << "It is a bread roll in this dungeon? Maybe there is a secret bakery around here.\n";
+    else{ //Need to fix this 
+        cout << "You made an excellent jab that knocked the lights out of your enemy.\n";
     }
 }
 
@@ -157,10 +159,6 @@ void GetHitStatements()
 
 void Traversal(char* dungeon, Point& startPoint, cPoint& exitPoint, cint width, cint height)
 {
-    /*
-    *   ADD YOUR CODE HERE AS REQUIRED. DEFINE NEW FUNCTIONS IF IT GETS LONG.
-    */
-    
     Player player;
 
     for(int i = 0; i < width; i++){
@@ -203,11 +201,9 @@ void Traversal(char* dungeon, Point& startPoint, cPoint& exitPoint, cint width, 
     }
 
     //Person 
-    
+
     int person;
     person = rand() % (height - 2);
-  
-    //cout << person << endl;
   
     if (dungeon[(person * width ) + 1] == ' '){
         dungeon[(person * width ) + 1] = 'P';
@@ -220,8 +216,6 @@ void Traversal(char* dungeon, Point& startPoint, cPoint& exitPoint, cint width, 
 
     int exit;
     exit = rand() % (height - 2);
-
-    //cout << exit << endl;
 
     if (dungeon[((exit + 1) * width)  - 2] == ' '){
         dungeon[((exit + 1) * width)  - 2] = 'X';
@@ -239,7 +233,7 @@ void Traversal(char* dungeon, Point& startPoint, cPoint& exitPoint, cint width, 
     }
 
     cout << "\n";
-
+    //(?)
     int size = width * height;
     for(int x = 1; x < size; x++){
         if (dungeon[x] == 'P'){
@@ -271,19 +265,61 @@ void Traversal(char* dungeon, Point& startPoint, cPoint& exitPoint, cint width, 
             char currentTemp = dungeon[currentPlace];
             int nextPlace = ((nextY) * width) + player.x;
             char nextTemp = dungeon[nextPlace];
+            //If next is empty
             if (nextTemp == ' '){
                 dungeon[currentPlace] = ' ';
                 dungeon[nextPlace] = 'P';
                 player.y = nextY;
                 cout << "There is nothing here\n";
             }
+            //If next is Food
             else if (nextTemp == 'F'){
                 int bonusFood = rand() % 5 + 4;
                 player.food += bonusFood;
+                //Food gets used Up so replaced by player
+                dungeon[currentPlace] = ' ';
+                dungeon[nextPlace] = 'P';
+                player.y = nextY;
+                //
                 FoodStatements();
             }
+            //If next is Trap
+            else if (nextTemp == 'T'){
+                player.loseHealth();
+                dungeon[currentPlace] = ' ';
+                dungeon[nextPlace] = 'P';
+                player.y = nextY;
+                TrapStatements();
+
+            }
+            //If next is health 
+            else if (nextTemp == 'H'){
+                player.gainHealth();
+                dungeon[currentPlace] = ' ';
+                dungeon[nextPlace] = 'P';
+                player.y = nextY;
+            }
+            //If next is wall
+            else if (nextTemp == 'W'){
+                cout << "There appears to be a wall here\n";
+            }
+            //If next is Enemy
+            else if (nextTemp == 'E'){
+                int enemies = rand() % 3 + 2;
+                dungeon[currentPlace] = ' ';
+                dungeon[nextPlace] = 'P';
+                player.y = nextY;
+
+                Combat(player, enemies);
+
+            }
+            else if (nextTemp == 'X'){
+                break;  
+            }
             player.food --;
+
             cout << "You have food for " << player.food << " more turns\n";
+            cout << "You have " << player.health << " health left\n";
             for (int i = 0; i < height*width; i ++){
                 cout << dungeon[i] << " "; 
                 if ((i + 1) % width == 0){
@@ -297,6 +333,7 @@ void Traversal(char* dungeon, Point& startPoint, cPoint& exitPoint, cint width, 
             char currentTemp = dungeon[currentPlace];
             int nextPlace = ((player.y) * width) + nextX;
             char nextTemp = dungeon[nextPlace];
+
             if (nextTemp == ' '){
                 dungeon[currentPlace] = ' ';
                 dungeon[nextPlace] = 'P';
@@ -306,10 +343,50 @@ void Traversal(char* dungeon, Point& startPoint, cPoint& exitPoint, cint width, 
             else if (nextTemp == 'F'){
                 int bonusFood = rand() % 5 + 4;
                 player.food += bonusFood;
+                //
+                dungeon[currentPlace] = ' ';
+                dungeon[nextPlace] = 'P';
+                player.x = nextX;
+                //
                 FoodStatements();
+            }
+            //If next is Trap
+            else if (nextTemp == 'T'){
+                player.loseHealth();
+                dungeon[currentPlace] = ' ';
+                dungeon[nextPlace] = 'P';
+                player.x = nextX;
+                TrapStatements();
+
+            }
+            //If next is health 
+            else if (nextTemp == 'H'){
+                player.gainHealth();
+                dungeon[currentPlace] = ' ';
+                dungeon[nextPlace] = 'P';
+                player.x = nextX;
+            }
+            //If next is Wall 
+            else if (nextTemp == 'W'){
+                cout << "There appears to be a wall here\n";
+            }
+            //If next is Enemy
+            else if (nextTemp == 'E'){
+
+                int enemies = rand() % 3 + 2;
+                dungeon[currentPlace] = ' ';
+                dungeon[nextPlace] = 'P';
+                player.x = nextX;
+                Combat(player, enemies);
+                
+
+            }
+            else if (nextTemp == 'X'){
+                break;  
             }
             player.food --;
             cout << "You have food for " << player.food << " more turns\n";
+            cout << "You have " << player.health << " health left\n";
             for (int i = 0; i < height*width; i ++){
                 cout << dungeon[i] << " "; 
                 if ((i + 1) % width == 0){
@@ -332,10 +409,47 @@ void Traversal(char* dungeon, Point& startPoint, cPoint& exitPoint, cint width, 
             else if (nextTemp == 'F'){
                 int bonusFood = rand() % 5 + 4;
                 player.food += bonusFood;
+                dungeon[currentPlace] = ' ';
+                //
+                dungeon[nextPlace] = 'P';
+                player.x = nextX;
+                //
                 FoodStatements();
+            }
+            //If next is Trap
+            else if (nextTemp == 'T'){
+                player.loseHealth();
+                dungeon[currentPlace] = ' ';
+                dungeon[nextPlace] = 'P';
+                player.x = nextX;
+                TrapStatements();
+
+            }
+            //If next is health 
+            else if (nextTemp == 'H'){
+                player.gainHealth();
+                dungeon[currentPlace] = ' ';
+                dungeon[nextPlace] = 'P';
+                player.x = nextX;
+            }
+            else if (nextTemp == 'W'){
+                cout << "There appears to be a wall here\n";
+            }
+            //If next is Enemy
+            else if (nextTemp == 'E'){
+                int enemies = rand() % 3 + 2;
+                dungeon[currentPlace] = ' ';
+                dungeon[nextPlace] = 'P';
+                player.x = nextX;
+                Combat(player, enemies); 
+
+            }
+            else if (nextTemp == 'X'){
+                break;  
             }
             player.food --;
             cout << "You have food for " << player.food << " more turns\n";
+            cout << "You have " << player.health << " health left\n";
             for (int i = 0; i < height*width; i ++){
                 cout << dungeon[i] << " "; 
                 if ((i + 1) % width == 0){
@@ -358,10 +472,46 @@ void Traversal(char* dungeon, Point& startPoint, cPoint& exitPoint, cint width, 
             else if (nextTemp == 'F'){
                 int bonusFood = rand() % 5 + 4;
                 player.food += bonusFood;
+                //
+                dungeon[currentPlace] = ' ';
+                dungeon[nextPlace] = 'P';
+                player.y = nextY;
+                //
                 FoodStatements();
+            }
+            //If next is Trap
+            else if (nextTemp == 'T'){
+                player.loseHealth();
+                dungeon[currentPlace] = ' ';
+                dungeon[nextPlace] = 'P';
+                player.y = nextY;
+                TrapStatements();
+
+            }
+            //If next is health 
+            else if (nextTemp == 'H'){
+                player.gainHealth();
+                dungeon[currentPlace] = ' ';
+                dungeon[nextPlace] = 'P';
+                player.y = nextY;
+            }
+            else if (nextTemp == 'W'){
+                cout << "There appears to be a wall here\n";
+            }
+            //If next is Enemy
+            else if (nextTemp == 'E'){
+                int enemies = rand() % 3 + 2;
+                dungeon[currentPlace] = ' ';
+                dungeon[nextPlace] = 'P';
+                player.y = nextY;
+                Combat(player, enemies);
+            }
+            else if (nextTemp == 'X'){
+                break;  
             }
             player.food --;
             cout << "You have food for " << player.food << " more turns\n";
+            cout << "You have " << player.health << " health left\n";
             for (int i = 0; i < height*width; i ++){
                 cout << dungeon[i] << " "; 
                 if ((i + 1) % width == 0){
@@ -371,31 +521,21 @@ void Traversal(char* dungeon, Point& startPoint, cPoint& exitPoint, cint width, 
         }
     }
 
+    if (player.alive == false){
+        cout << "You have died.";
+    }
+    else{
+        cout << "Congratulations, You have made it out of the dungeon.";
+    }
 
-    //Game
-    //KINDA STUCK AT THIS PART
-    //  char userinput;
-
-    //  cout << "Press S to start" << endl;
-
-    //  cin >> userinput;
-
-    //  cout << startPoint.x << " " << startPoint.y << endl;
-
-    //  while (userinput != 'x'){
-    //      cout << "UP -> U, DOWN -> D, LEFT -> L, RIGHT -> R" << endl;
-    //      cin >> userinput;
-    //    if (userinput == 'U'){
-    //         dungeon[]
-    //     }
-    //  }
 }
 
 void Combat(Player& player, int enemies)
-{   
+{   cout << enemies << endl;
     //Combat function for when player arrives at E
     cout << "You come across " << enemies << " enemies. You will have to fight.\n";
-    while(enemies != 0 || player.alive == false){
+
+    while(enemies != 0 && player.alive == true){
         int playerHit = rand() % 100;
         if (playerHit < 30){
             HitStatements();
@@ -405,10 +545,10 @@ void Combat(Player& player, int enemies)
         if (enemies != 0){
             for (int x = 0; x < enemies; x++){
                 int enemyHit = rand() % 100;
-                if (enemyHit < 30){
+                if (enemyHit < 10){
                     GetHitStatements();
                     player.loseHealth();
-                    cout << "You lose 1 health";
+                    cout << "You lose 1 health\n";
                 }
             }
         }
