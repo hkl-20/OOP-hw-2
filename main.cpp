@@ -79,18 +79,6 @@ int main ()
     dungeon = CreateDungeon(width, height, startPoint, exitPoint);
 
     Traversal(dungeon, startPoint, exitPoint, width, height);
-    
-    for (int i = 0; i < height*width; i ++){
-        cout << dungeon[i] << " "; 
-        if ((i + 1) % width == 0){
-            cout << endl;
-        }
-    }
-
-    // Beginning of the game in story mode
-    cout << "\nAfter being captured by a raid of some robbers on your caravan,\n";
-    cout << "you find yourself alone in a dark dungeon. With nothing but your\n";
-    cout << "wits, you choose to take a step...\n";
 
     return 0;
 }
@@ -115,32 +103,56 @@ void TrapStatements()
 
 void FoodStatements()
 {
-    /*
-    *   ADD YOUR CODE HERE AS REQUIRED
+    /* 
+    Just assign some statements for getting food and call them at a certain probability
     */
-   /* 
-   Just assign some statements for getting food and call them at a certain probability
-   */
+    int select = rand() % 3 + 1;
+    if (select == 1){
+        cout << "You looked at the food and it was a well cooked chicken ... well at least it looked like one.\n";
+    }
+    else if (select == 2)
+    {
+        cout << "It is a rat as big as a rabbit. It will go down well with a bit of wasp juice.\n";
+    }
+    else{
+        cout << "It is a bread roll in this dungeon? Maybe there is a secret bakery around here.\n";
+    }
 }
 
 void HitStatements()
 {
-    /*
-    *   ADD YOUR CODE HERE AS REQUIRED
+    /* 
+    Assign some statements for when the user hits and call them at a certain probability
     */
-   /* 
-   Assign some statements for when the user hits and call them at a certain probability
-   */
+    int select = rand() % 3 + 1;
+    if (select == 1){
+        cout << "Your roundhouse kick sent your enemy flying right into a gutter.\n";
+    }
+    else if (select == 2)
+    {
+        cout << "Your speed is unmatched and delivered a Stone Cold Stunner.\n";
+    }
+    else{
+        cout << "It is a bread roll in this dungeon? Maybe there is a secret bakery around here.\n";
+    }
 }
 
 void GetHitStatements()
 {
     /*
-    *   ADD YOUR CODE HERE AS REQUIRED
+    Assign some statements for when the user gets hit and call them at a certain probability
     */
-   /* 
-   Assign some statements for when the user gets hit and call them at a certain probability
-   */
+    int select = rand() % 3 + 1;
+    if (select == 1){
+        cout << "The enemy avoided your attack and gave you a nasty scratch.\n";
+    }
+    else if (select == 2)
+    {
+        cout << "You were not prepared for a sudden lunging attack that hit you hard.\n";
+    }
+    else{
+        cout << "The enemy threw a rock that hit you on the temple and shook you bad.\n";
+    }
 }
 
 void Traversal(char* dungeon, Point& startPoint, cPoint& exitPoint, cint width, cint height)
@@ -216,6 +228,20 @@ void Traversal(char* dungeon, Point& startPoint, cPoint& exitPoint, cint width, 
         dungeon[width*height - width - 2] = 'X';
     }
 
+    for (int i = 0; i < height*width; i ++){
+        cout << dungeon[i] << " "; 
+        if ((i + 1) % width == 0){
+            cout << endl;
+        }
+    }
+
+    // Beginning of the game in story mode
+    cout << "\nAfter being captured by a raid of some robbers on your caravan,\n";
+    cout << "you find yourself alone in a dark dungeon. With nothing but your\n";
+    cout << "wits, you choose to take a step...\n";
+
+    cout << "\nIn which direction do you want to move? (U,D,L,R; Press X if you want to give up and die.)\n";
+
     //Game
 // KINDA STUCK AT THIS PART
   //  char userinput;
@@ -236,14 +262,27 @@ void Traversal(char* dungeon, Point& startPoint, cPoint& exitPoint, cint width, 
 }
 
 void Combat(Player& player, int enemies)
-{
-    
-   /*
-    In this function create a for loop in which you will get hit or will hit someone
-        
-        1) The prob for a successful attack is 0.3
-            1) If that happens then the return attack prob is 0.1
-   */
+{   
+    //Combat function for when player arrives at E
+    cout << "You come across " << enemies << " enemies. You will have to fight.\n";
+    while(enemies != 0 || player.alive == false){
+        int playerHit = rand() % 100;
+        if (playerHit < 30){
+            HitStatements();
+            enemies --;
+            cout << "You killed one enemy!\n";
+        }
+        if (enemies != 0){
+            for (int x = 0; x < enemies; x++){
+                int enemyHit = rand() % 100;
+                if (enemyHit < 30){
+                    GetHitStatements();
+                    player.loseHealth();
+                    cout << "You lose 1 health";
+                }
+            }
+        }
+    } 
 }
 
 char* CreateDungeon(int width, int height, Point& ref_startPoint, Point& ref_exitPoint)
