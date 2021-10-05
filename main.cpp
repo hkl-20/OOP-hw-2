@@ -98,11 +98,19 @@ int main ()
 void TrapStatements()
 {
     /*
-    *   ADD YOUR CODE HERE AS REQUIRED
+    Just assign some statements for health detoriation and call them at a certain probability
     */
-   /* 
-   Just assign some statements for health detoriation and call them at a certain probability
-   */
+    int select = rand() % 3 + 1;
+    if (select == 1){
+        cout << "An arrow flew out of a nearby wall and hit you in your posterior. That will leave a scar!\n";
+    }
+    else if (select == 2)
+    {
+        cout << "You walked into some spikes that sprung out of the floor.\n";
+    }
+    else{
+        cout << "You stepped into a bear trap and got yourself injured.\n";
+    }
 }
 
 void FoodStatements()
@@ -225,17 +233,6 @@ void Traversal(char* dungeon, Point& startPoint, cPoint& exitPoint, cint width, 
    //         dungeon[]
    //     }
   //  }
-
-
-
-    
-
-
-
-   
-
-   
-
 }
 
 void Combat(Player& player, int enemies)
