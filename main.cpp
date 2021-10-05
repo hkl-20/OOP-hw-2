@@ -161,6 +161,8 @@ void Traversal(char* dungeon, Point& startPoint, cPoint& exitPoint, cint width, 
     *   ADD YOUR CODE HERE AS REQUIRED. DEFINE NEW FUNCTIONS IF IT GETS LONG.
     */
     
+    Player player;
+
     for(int i = 0; i < width; i++){
         dungeon[i] = 'W';
     }
@@ -240,25 +242,39 @@ void Traversal(char* dungeon, Point& startPoint, cPoint& exitPoint, cint width, 
     cout << "you find yourself alone in a dark dungeon. With nothing but your\n";
     cout << "wits, you choose to take a step...\n";
 
+    while (player.alive == true && player.food != 0)
+    {
+        char nextDirection; 
+        cout << "\nIn which direction do you want to move? (U,D,L,R; Press X if you want to give up and die.)\n";
+        cin >> nextDirection;
+        if (nextDirection == 'x' || nextDirection == 'X'){
+            player.alive = false;
+        }
+        else{
+            player.food --;
+            cout << "You have food for " << player.food << " more turns\n";
+        }
+    }
+    
     cout << "\nIn which direction do you want to move? (U,D,L,R; Press X if you want to give up and die.)\n";
 
     //Game
-// KINDA STUCK AT THIS PART
-  //  char userinput;
+    //KINDA STUCK AT THIS PART
+    //  char userinput;
 
-  //  cout << "Press S to start" << endl;
+    //  cout << "Press S to start" << endl;
 
-  //  cin >> userinput;
+    //  cin >> userinput;
 
-  //  cout << startPoint.x << " " << startPoint.y << endl;
+    //  cout << startPoint.x << " " << startPoint.y << endl;
 
-  //  while (userinput != 'x'){
-  //      cout << "UP -> U, DOWN -> D, LEFT -> L, RIGHT -> R" << endl;
-  //      cin >> userinput;
+    //  while (userinput != 'x'){
+    //      cout << "UP -> U, DOWN -> D, LEFT -> L, RIGHT -> R" << endl;
+    //      cin >> userinput;
     //    if (userinput == 'U'){
-   //         dungeon[]
-   //     }
-  //  }
+    //         dungeon[]
+    //     }
+    //  }
 }
 
 void Combat(Player& player, int enemies)
