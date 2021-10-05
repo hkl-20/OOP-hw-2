@@ -230,10 +230,24 @@ void Traversal(char* dungeon, Point& startPoint, cPoint& exitPoint, cint width, 
         dungeon[width*height - width - 2] = 'X';
     }
 
+
     for (int i = 0; i < height*width; i ++){
         cout << dungeon[i] << " "; 
         if ((i + 1) % width == 0){
             cout << endl;
+        }
+    }
+
+    cout << "\n";
+
+    int size = width * height;
+    for(int x = 1; x < size; x++){
+        if (dungeon[x] == 'P'){
+            cout << "\n" << x << "\n";
+            player.x = (x % width);
+            cout << "Width of Player is: " << player.x << endl;
+            player.y = (x / width);
+            cout << "Height of Player is: " << player.y << endl;
         }
     }
 
@@ -244,19 +258,104 @@ void Traversal(char* dungeon, Point& startPoint, cPoint& exitPoint, cint width, 
 
     while (player.alive == true && player.food != 0)
     {
-        char nextDirection; 
+        char nextDirection;
+        int nextX, nextY;
         cout << "\nIn which direction do you want to move? (U,D,L,R; Press X if you want to give up and die.)\n";
         cin >> nextDirection;
         if (nextDirection == 'x' || nextDirection == 'X'){
             player.alive = false;
         }
+        else if (nextDirection == 'u' || nextDirection == 'U'){
+            nextY = player.y - 1;
+            int currentPlace = ((player.y) * width) + player.x;
+            char currentTemp = dungeon[currentPlace];
+            int nextPlace = ((nextY) * width) + player.x;
+            char nextTemp = dungeon[nextPlace];
+            if (nextTemp == ' '){
+                dungeon[currentPlace] = ' ';
+                dungeon[nextPlace] = 'P';
+                player.y = nextY;
+                player.food --;
+                cout << "You have food for " << player.food << " more turns\n";
+
+                for (int i = 0; i < height*width; i ++){
+                    cout << dungeon[i] << " "; 
+                    if ((i + 1) % width == 0){
+                        cout << endl;
+                    }
+                }   
+            }
+        }
+        else if (nextDirection == 'r' || nextDirection == 'R'){
+            nextX = player.x + 1;
+            int currentPlace = ((player.y) * width) + player.x;
+            char currentTemp = dungeon[currentPlace];
+            int nextPlace = ((player.y) * width) + nextX;
+            char nextTemp = dungeon[nextPlace];
+            if (nextTemp == ' '){
+                dungeon[currentPlace] = ' ';
+                dungeon[nextPlace] = 'P';
+                player.x = nextX;
+                player.food --;
+                cout << "You have food for " << player.food << " more turns\n";
+
+                for (int i = 0; i < height*width; i ++){
+                    cout << dungeon[i] << " "; 
+                    if ((i + 1) % width == 0){
+                        cout << endl;
+                    }
+                }   
+            }
+        }
+        else if (nextDirection == 'l' || nextDirection == 'L'){
+            nextX = player.x - 1;
+            int currentPlace = ((player.y) * width) + player.x;
+            char currentTemp = dungeon[currentPlace];
+            int nextPlace = ((player.y) * width) + nextX;
+            char nextTemp = dungeon[nextPlace];
+            if (nextTemp == ' '){
+                dungeon[currentPlace] = ' ';
+                dungeon[nextPlace] = 'P';
+                player.x = nextX;
+                player.food --;
+                cout << "You have food for " << player.food << " more turns\n";
+
+                for (int i = 0; i < height*width; i ++){
+                    cout << dungeon[i] << " "; 
+                    if ((i + 1) % width == 0){
+                        cout << endl;
+                    }
+                }   
+            }
+        }
+        else if (nextDirection == 'd' || nextDirection == 'D'){
+            nextY = player.y + 1;
+            int currentPlace = ((player.y) * width) + player.x;
+            char currentTemp = dungeon[currentPlace];
+            int nextPlace = ((nextY) * width) + player.x;
+            char nextTemp = dungeon[nextPlace];
+            if (nextTemp == ' '){
+                dungeon[currentPlace] = ' ';
+                dungeon[nextPlace] = 'P';
+                player.y = nextY;
+                player.food --;
+                cout << "You have food for " << player.food << " more turns\n";
+
+                for (int i = 0; i < height*width; i ++){
+                    cout << dungeon[i] << " "; 
+                    if ((i + 1) % width == 0){
+                        cout << endl;
+                    }
+                }   
+            }
+        }
         else{
             player.food --;
             cout << "You have food for " << player.food << " more turns\n";
         }
+
     }
-    
-    cout << "\nIn which direction do you want to move? (U,D,L,R; Press X if you want to give up and die.)\n";
+
 
     //Game
     //KINDA STUCK AT THIS PART
